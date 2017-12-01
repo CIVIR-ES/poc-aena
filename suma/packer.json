@@ -1,0 +1,66 @@
+{
+  "builders":
+  [
+    {
+      "disk_image": true,
+      "headless": true,
+      "format": "{{ user `format` }}",
+      "iso_url": "../isos/SLES12-SP3-JeOS-for-OpenStack-Cloud.x86_64-GM.qcow2",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "e21926f75d1ff192c0d8c16241e1fc69f0c7d455b879be393a5a6bc540fa20f3",
+      "output_directory": "{{ user `output` }}/{{ user `name` }}",
+      "qemuargs" : [
+        [ "-drive", "file={{ user `output` }}/{{ user `name` }}/{{ user `name` }}.{{ user `format` }},if=virtio,cache=writeback,discard=ignore,format={{ user `format` }}"],
+        [ "-drive", "file=cloud-init/seed.iso,if=virtio" ]
+      ],
+      "shutdown_command": "sudo poweroff",
+      "ssh_username": "packer",
+      "ssh_password": "packer",
+      "type": "qemu",
+      "vm_name": "{{ user `name` }}.{{ user `format` }}"
+    }
+  ],
+  "provisioners":
+  [
+    {
+      "type": "file",
+      "source": "config/",
+      "destination": "/tmp" 
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "all_proxy={{ user `proxy` }}",
+        "http_proxy={{ user `proxy` }}",
+        "https_proxy={{ user `proxy` }}",
+        "no_proxy={{ user `no_proxy` }}"
+      ],
+      "expect_disconnect": true,
+      "scripts": [
+        "scripts/suma_install.sh"
+      ],
+      "execute_command": "{{.Vars}} sudo -S -E bash '{{.Path}}'"
+    },
+    {
+      "type": "shell",
+      "environment_vars": [
+        "all_proxy={{ user `proxy` }}",
+        "http_proxy={{ user `proxy` }}",
+        "https_proxy={{ user `proxy` }}",
+        "no_proxy={{ user `no_proxy` }}"
+      ],
+      "scripts": [
+        "scripts/suma_setup.sh"
+      ],
+      "execute_command": "{{.Vars}} sudo -S -E bash '{{.Path}}'"
+    }
+  ],
+  "variables":
+  {
+    "format": "qcow2",
+    "name": "suma-sles12-sp3-jeos",
+    "no_proxy": "{{ env `no_proxy` }}",
+    "proxy": "{{ env `all_proxy` }}",
+    "output": "../builds"
+  }
+}

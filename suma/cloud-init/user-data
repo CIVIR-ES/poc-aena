@@ -1,0 +1,15 @@
+#cloud-config
+users:
+  - default
+  - name: packer
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+chpasswd:
+  list: |
+    root:changeme
+    packer:packer
+  expire: False
+
+timezone: Europe/Madrid
+
+resize_rootfs: true
