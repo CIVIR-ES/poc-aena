@@ -33,7 +33,9 @@
         "all_proxy={{ user `proxy` }}",
         "http_proxy={{ user `proxy` }}",
         "https_proxy={{ user `proxy` }}",
-        "no_proxy={{ user `no_proxy` }}"
+        "no_proxy={{ user `no_proxy` }}",
+	"SLES_REGCODE={{ user `sles_regcode` }}",
+	"SUMA_REGCODE={{ user `suma_regcode` }}"
       ],
       "expect_disconnect": true,
       "scripts": [
@@ -61,6 +63,8 @@
     "name": "suma-sles12-sp3-jeos",
     "no_proxy": "{{ env `no_proxy` }}",
     "proxy": "{{ env `all_proxy` }}",
-    "output": "../builds"
+    "output": "../builds",
+    "sles_regcode": "{{ env `SLES_REGCODE` }}",          
+    "suma_regcode": "{{ env `SUMA_REGCODE` }}"
   }
 }

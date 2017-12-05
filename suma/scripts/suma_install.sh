@@ -2,11 +2,8 @@
 
 set -eux
 
-SUSE_USER=
-SUSE_REGCODE=
-
-SUSEConnect -e ${SUSE_USER} -r ${SUSE_REGCODE}
-SUSEConnect -p SUSE-Manager-Server/3.1/x86_64 -r ${SUSE_REGCODE}
+SUSEConnect -r ${SLES_REGCODE}
+SUSEConnect -p SUSE-Manager-Server/3.1/x86_64 -r ${SUMA_REGCODE}
 
 zypper refresh
 
